@@ -8,7 +8,6 @@ paginate:     1
 author:
   name:       Anton Kuznetsov
   url:        http://antonkuz.github.io
-
 # Gems
 gems:
   - jekyll-paginate
