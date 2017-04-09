@@ -1,0 +1,17 @@
+# Setup
+title:        Testing Graph Bipartiteness using MPI
+tagline:      15-418 Final Project
+baseurl:      ""
+paginate:     1
+
+# About/contact
+author:
+  name:       Anton Kuznetsov
+  url:        http://antonkuz.github.io
+
+# Gems
+gems:
+  - jekyll-paginate
+
+#Others
+markdown: kramdown
