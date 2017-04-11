@@ -1,0 +1,48 @@
+---
+layout: default
+title:  "Proposal"
+date:   2017-04-10 04:20:00
+categories: main
+---
+
+# Testing Graph Bipartiteness using MPI
+## Summary
+We are going to check if a large graph is bipartite or not on multi-core platforms such as the GHC machines.
+
+## Background
+A Bipartite Graph is a graph whose vertices can be divided into two independent sets, U and V such that every edge (u, v) either connects a vertex from U to V or a vertex from V to U. In other words, for every edge (u, v), either u belongs to U and v to V, or u belongs to V and v to U. We can also say that there is no edge that connects vertices of same set.
+
+## The challenge 
+Checking huge graphs (with over million nodes and edges) for bipartiteness is challenging when performed on a single node because of both the space and time constraints. We plan to parallelize the graph processing to make it faster. In-memory space is limited, so we need to do many disk reads to compute over the entire graph. We need to efficiently hide the latency of these reads, and also improve the compute time such that, even with the additional latency, we still see a speed-up. 
+
+Throughout the project, we hope to experiment with many different algorithms and see which exhibit the best parallelism. We'll try to split vertices into groups to improve locality. Technologies we'll try using are not limited to MPI: we'll try adding OpenMP and, if possible, implement using a parallel framework or a DSL.
+
+## Resources
+We plan to use the GHC machines for initial development and testing and later expand to the Latedays cluster. For communication/synchronization, we'll use OpenMPI.
+
+To get started, we will study relevant papers on the subject. For example, we'll read [this paper on parallel bfs](http://supertech.csail.mit.edu/papers/pbfs.pdf) and [this paper about parallel data mining](http://users.eecs.northwestern.edu/~yingliu/papers/para_arm_cluster.pdf).
+
+## Goals and Deliverables
+Plan to achieve:
+ * Implement an algorithm to check for Bipartiteness of a graph that is highly parallel.
+ * Achieve at least 10x speedup as compared to the computation time on a single node.
+Hope to achieve:
+ * A hybrid version of MPI+OpenMP which can beat the performance of MPI alone.
+Demo:
+ * Show our algorithm in action on graphs which we will obtain from the [Stanford Network Analysis project repository](http://snap.stanford.edu/).
+
+## Platform choice
+It would be beneficial to use multiple machines to process large graphs, so we'll be using GHC and Latedays cluster which provide us with such access. For synchronization and communication, we will use OpenMPI that will establish a message passing system between the machines and cores within them. The machines in both clusters have high core count that will help us achieve the desired speedup. As for the programming language, we're going to use C++.
+
+## Schedule
+
+| Week of  | Things to do |
+| ------------- | ------------- |
+| April 10  | Implement sequential algorithm, research papers/web on possible parallelization approaches (algorithms and alternatives to MPI).   |
+| April 17 | Collect testcases, implement testbench, implement a working parallel version, complete checkpoint writeup. |
+| April 24 | Optimize the the parallel algorithm, test on large graphs, iterate. |
+| May 1    | Implement a version with a different approach (e.g. algorithm or framework), collect speedup data. |
+| May 8    | Wrap up, stretch goals, final report. |
+
+[jekyll-gh]: https://github.com/mojombo/jekyll
+[jekyll]:    http://jekyllrb.com
