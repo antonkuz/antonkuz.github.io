@@ -21,9 +21,6 @@ A Bipartite Graph is a graph whose vertices can be divided into two independent 
 We plan to use the Latedays cluster to run our code on multiple machines. For communication/synchronization, we'll use OpenMPI.
 
 ## Goals and Deliverables
-Describe the deliverables or goals of your project.
-
-This is by far the most important section of the proposal:
 
  We plan to implement an algorithm to check for Bipartiteness of a graph that is highly parallel . We are aiming for at least 10x speedup as compared to the computation time on a single node. At the demo, we will show our algorithm in action on graphs which we will obtain from the Stanford Network Analysis
  project repository. (http://snap.stanford.edu/).
