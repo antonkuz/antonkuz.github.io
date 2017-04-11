@@ -12,7 +12,7 @@ We are going to check if a large graph is bipartite or not on multi-core platfor
 ## Background
 A Bipartite Graph is a graph whose vertices can be divided into two independent sets, U and V such that every edge (u, v) either connects a vertex from U to V or a vertex from V to U. In other words, for every edge (u, v), either u belongs to U and v to V, or u belongs to V and v to U. We can also say that there is no edge that connects vertices of same set.
 
-## The challenge 
+## The Challenge 
 Checking huge graphs (with over million nodes and edges) for bipartiteness is challenging when performed on a single node because of both the space and time constraints. We plan to parallelize the graph processing to make it faster. In-memory space is limited, so we need to do many disk reads to compute over the entire graph. We need to efficiently hide the latency of these reads, and also improve the compute time such that, even with the additional latency, we still see a speed-up. 
 
 Throughout the project, we hope to experiment with many different algorithms and see which exhibit the best parallelism. We'll try to split vertices into groups to improve locality. Technologies we'll try using are not limited to MPI: we'll try adding OpenMP and, if possible, implement using a parallel framework or a DSL.
@@ -26,12 +26,14 @@ To get started, we will study relevant papers on the subject. For example, we'll
 Plan to achieve:
  * Implement an algorithm to check for Bipartiteness of a graph that is highly parallel.
  * Achieve at least 10x speedup as compared to the computation time on a single node.
+
 Hope to achieve:
  * A hybrid version of MPI+OpenMP which can beat the performance of MPI alone.
+ 
 Demo:
  * Show our algorithm in action on graphs which we will obtain from the [Stanford Network Analysis project repository](http://snap.stanford.edu/).
 
-## Platform choice
+## Platform Choice
 It would be beneficial to use multiple machines to process large graphs, so we'll be using GHC and Latedays cluster which provide us with such access. For synchronization and communication, we will use OpenMPI that will establish a message passing system between the machines and cores within them. The machines in both clusters have high core count that will help us achieve the desired speedup. As for the programming language, we're going to use C++.
 
 ## Schedule
