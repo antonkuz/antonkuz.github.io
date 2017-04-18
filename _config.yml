@@ -1,5 +1,5 @@
 # Setup
-title:        Testing Graph Bipartiteness using MPI
+title:        Parallel Closeness Centrality for Facebook Graphs
 tagline:      Anton Kuznetsov and Aditya Bhushan
 baseurl:      ""
 paginate:     1

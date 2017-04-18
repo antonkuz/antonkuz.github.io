@@ -5,45 +5,50 @@ date:   2017-04-10 04:20:00
 categories: main
 ---
 
-# Testing Graph Bipartiteness using MPI
+# Parallel Closeness Centrality for Facebook Graphs
 ## Summary
-We are going to check if a large graph is bipartite or not on multi-core platforms such as the GHC machines.
+We are going to parallelize closeness centrality calculations for large weighted graphs and then apply the algorithm to graphs mined via Facebook Graph API. We want to generate graphs from real Facebook data and make graphs weighted by applying a friendship ranking metric. For these large weighted graphs, we want to develop a fast parallel closeness centrality implementation using OpenMP. We will run the algorithm on multi-core platforms such as the GHC machines.
 
 ## Background
-A Bipartite Graph is a graph whose vertices can be divided into two independent sets, U and V such that every edge (u, v) either connects a vertex from U to V or a vertex from V to U. In other words, for every edge (u, v), either u belongs to U and v to V, or u belongs to V and v to U. We can also say that there is no edge that connects vertices of same set.
+Closeness centrality is a metric expresses the average social distance from each individual to every other individual in the network. If we divide 1 by the average shortest path from an individual to all other individuals in the network, then we have calculated their closeness centrality. In this way an individual with a direct tie to everyone else ends up with a closeness score of 1. One property of closeness centrality is that it tends to give high scores to individuals who are near the center of local clusters (aka network communities) in an overall larger network. High closeness centrality individuals tend to be important influencers within their local network community.
 
 ## The Challenge 
-Checking huge graphs (with over million nodes and edges) for bipartiteness is challenging when performed on a single node because of both the space and time constraints. We plan to parallelize the graph processing to make it faster. In-memory space is limited, so we need to do many disk reads to compute over the entire graph. We need to efficiently hide the latency of these reads, and also improve the compute time such that, even with the additional latency, we still see a speed-up. 
+Finding shortest paths from a node to all other nodes is a challenging task in a large weighted graph, because of both space and time constraints. There is no single best algorithm for it, and all conventional versions are sequential. In-memory space is limited, so we need to do many disk reads to compute over the entire graph. We need to efficiently hide the latency of these reads, and also improve the compute time such that, even with the additional latency, we still see a speed-up. 
 
-Throughout the project, we hope to experiment with many different algorithms and see which exhibit the best parallelism. We'll try to split vertices into groups to improve locality. Technologies we'll try using are not limited to MPI: we'll try adding OpenMP and, if possible, implement using a parallel framework or a DSL.
+Mining graphs from Facebook is not something that's available off-the-shelf, so we will need to develop a custom application for our needs. Besides, since we want weighted graphs, we will need to add a metric that would rank friendships. 
 
 ## Resources
-We plan to use the GHC machines for initial development and testing and later expand to the Latedays cluster. For communication/synchronization, we'll use OpenMPI.
+There is some information available on parallelizing shortest path algorithms, such as [this presentation on Dijkstra's](http://www.cse.buffalo.edu/faculty/miller/Courses/CSE633/Ye-Fall-2012-CSE633.pdf).
+Facebook's Graph API doesn't have an SDK for C++, so for mining we will either use another language and save graphs on disk, or port it to C++ and pipeline mining into the computation.
+For weighting graphs, we are planning to base it on [this algorithm](https://github.com/gajus/facebook-friend-rank).
 
-To get started, we will study relevant papers on the subject. For example, we'll read [this paper on parallel bfs](http://supertech.csail.mit.edu/papers/pbfs.pdf) and [this paper about parallel data mining](http://users.eecs.northwestern.edu/~yingliu/papers/para_arm_cluster.pdf).
+We plan to use the GHC machines for development and testing. We will program in C++ and use OpenMP for parallelization. We will also try using [C++ Boost Library](http://www.boost.org/doc/libs/1_63_0/libs/graph/doc/index.html) functions for graphs and good old pthreads.
 
 ## Goals and Deliverables
+
 Plan to achieve:
- * Implement an algorithm to check for Bipartiteness of a graph that is highly parallel.
- * Achieve at least 10x speedup as compared to the computation time on a single node.
+ * Implement a parallel approach to finding shortest paths to make closeness centrality calculations faster.
+ * Achieve at least 5x speedup as compared to a sequential algorithm with Dijkstra's.
+ * Mine our own weighted graphs from Facebook.
+ * Apply our algorithm to Facebook graphs.
 
 Hope to achieve:
- * A hybrid version of MPI+OpenMP which can beat the performance of MPI alone.
+ * Parallelize the mining process.
  
 Demo:
- * Show our algorithm in action on graphs which we will obtain from the [Stanford Network Analysis project repository](http://snap.stanford.edu/).
+ * Show our algorithm in action with real facebook data and demonstrate speedup graphs.
 
 ## Platform Choice
-It would be beneficial to use multiple machines to process large graphs, so we'll be using GHC and Latedays cluster which provide us with such access. For synchronization and communication, we will use OpenMPI that will establish a message passing system between the machines and cores within them. The machines in both clusters have high core count that will help us achieve the desired speedup. As for the programming language, we're going to use C++.
+Parallelizing the algorithm on a multicore CPU will provide speedup compared to a sequential version due to the large number of shortest path calculations. GHC cluster has high core count machines, and we will use C++, OpenMP, and pthreads to activate all the cores. 
 
 ## Schedule
 
 | Week of  | Things to do |
 | ------------- | ------------- |
-| April 10  | Implement sequential algorithm, research papers/web on possible parallelization approaches (algorithms and alternatives to MPI).   |
-| April 17 | Collect testcases, implement testbench, implement a working parallel version, complete checkpoint writeup. |
-| April 24 | Optimize the the parallel algorithm, test on large graphs, iterate. |
-| May 1    | Implement a version with a different approach (e.g. algorithm or framework), collect speedup data. |
+| April 10 | Research papers/web on possible parallelization approachs.   |
+| April 17 | Implement sequential algorithm, start working on parallel version and the mining application, complete checkpoint writeup. |
+| April 24 | Have a working parallel implementation, test on mined graphs, iterate. |
+| May 1    | Generate large graphs, produce final parallel implementation, collect speedup data. |
 | May 8    | Wrap up, stretch goals, final report. |
 
 [jekyll-gh]: https://github.com/mojombo/jekyll
