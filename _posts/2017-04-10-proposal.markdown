@@ -7,7 +7,7 @@ categories: main
 
 # Proposal
 ## Summary
-We are going to parallelize closeness centrality calculations for large weighted graphs and then apply the algorithm to graphs mined via Facebook Graph API. We want to generate graphs from real Facebook data and make graphs weighted by applying a friendship ranking metric. For these large weighted graphs, we want to develop a fast parallel closeness centrality implementation using OpenMP. We will run the algorithm on multi-core platforms such as the GHC machines.
+We are going to parallelize closeness centrality calculations for large weighted graphs and then apply the algorithm to graphs mined via Facebook Graph API. We want to generate graphs from real Facebook data and make graphs weighted by applying a friendship ranking metric. For these large weighted graphs, we want to develop a fast parallel closeness centrality implementation using OpenMP.
 
 ## Background
 Closeness centrality is a metric expresses the average social distance from each individual to every other individual in the network. If we divide 1 by the average shortest path from an individual to all other individuals in the network, then we have calculated their closeness centrality. In this way an individual with a direct tie to everyone else ends up with a closeness score of 1. One property of closeness centrality is that it tends to give high scores to individuals who are near the center of local clusters (aka network communities) in an overall larger network. High closeness centrality individuals tend to be important influencers within their local network community.
@@ -45,7 +45,7 @@ Parallelizing the algorithm on a multicore CPU will provide speedup compared to 
 
 | Week of  | Things to do |
 | ------------- | ------------- |
-| April 10 | Research papers/web on possible parallelization approachs.   |
+| April 10 | Research papers/web on possible parallelization approaches.   |
 | April 17 | Implement sequential algorithm, start working on parallel version and the mining application, complete checkpoint writeup. |
 | April 24 | Have a working parallel implementation, test on mined graphs, iterate. |
 | May 1    | Generate large graphs, produce final parallel implementation, collect speedup data. |
