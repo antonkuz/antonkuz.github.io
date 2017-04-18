@@ -19,7 +19,7 @@ Mining graphs from Facebook is not something that's available off-the-shelf, so 
 
 ## Resources
 There is some information available on parallelizing shortest path algorithms, such as [this presentation on Dijkstra's](http://www.cse.buffalo.edu/faculty/miller/Courses/CSE633/Ye-Fall-2012-CSE633.pdf).
-Facebook's Graph API doesn't have an SDK for C++, so for mining we will either use another language and save graphs on disk, or port it to C++ and pipeline mining into the computation.
+For mining facebook graphs, we'll use Facebook Graph API. We will start off with a scripting language like Python and save graphs on disk, and later might port the code to C++ to pipeline mining into the computation.
 For weighting graphs, we are planning to base it on [this algorithm](https://github.com/gajus/facebook-friend-rank).
 
 We plan to use the GHC machines for development and testing. We will program in C++ and use OpenMP for parallelization. We will also try using [C++ Boost Library](http://www.boost.org/doc/libs/1_63_0/libs/graph/doc/index.html) functions for graphs and good old pthreads.
