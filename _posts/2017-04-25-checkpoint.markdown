@@ -50,8 +50,8 @@ For all the above, we believe it's just a matter of doing the work to get over t
 | ------------ | ------------- |
 | 4/24-4/29 | Aditya: Find best parallel Floyd-Warshall implementation; Anton: Find best parallel Dijkstra's implementation. |
 | 4/30-5/1  | Exam 2.
-| 5/2-5/4   | Aditya: Test on large graphs, select which approaches to proceed with; Anton: Implement edge weighing for Facebook. |
-| 5/5-5/7   | Both: Divide up the approaches and optimize. |
+| 5/2-5/4   | Both: Compare all approaches, select which approaches to proceed with; |
+| 5/5-5/7   | Aditya: Optimize selected approach. Anton: Implement edge weighing and graph mining for Facebook. |
 | 5/8-5/12  | Both: Generate final results, write final report. |
 
 [jekyll-gh]: https://github.com/mojombo/jekyll
