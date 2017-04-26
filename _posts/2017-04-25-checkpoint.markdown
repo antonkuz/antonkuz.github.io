@@ -23,17 +23,26 @@ We've implemented simple sequential versions of F-W and Dijkstra's, and have sta
 We've also started parallelizing F-W using the approach described in the [Phased Floyd-Warshall paper](http://www.cse.psu.edu/~huv101/files/papers/sbgv_2007_icpads.pdf) that uses MPI. This approach utlilizes blocking techniques to improve cache performance and at the same time ensuring lesser communication overheard when running in a distributed setting.
 
 ## Goals and Deliverables
-We've decided to lower our ambitions related to Facebook Graphs due to scarcity of data and bandwidth limitations. We still aim for applying our program to Facebook graphs, but the graph size will be limited by what we can mine in a minute with a single account, around 500 vertices. This way we can live demo the algorithm on any user's friends.
+We've decided to lower our ambitions related to Facebook Graphs due to scarcity of data and bandwidth limitations. We still aim for applying our program to Facebook graphs, but the graph size will be limited by what we can mine in a minute with a single account, around 500 vertices. This way we can live demo the algorithm on any user's friends. 
 
-Mining a large graph will be our stretch goal, as it can be an interesting challenge to combine from several accounts in efforts to mine together in parallel.
+Mining a large facebook graph will be our stretch goal, as it can be an interesting challenge to combine from several accounts in efforts to mine together in parallel.
 
 As for Closeness Centrality algorithm, the goal stays the same: we're expecting our parallel implementation to have significant speedup over a sequential one.
 
-In your checkpoint writeup we want a new list of goals that you plan to hit for the Parallelism competition. What do you plan to show at the parallelism competition? Will it be a demo? Will it be a graph?
+More specifically, the goals are the following:
+1. Implement parallel versions of both F-W and Dijkstra's with OpenMP.
+2. Implement parallel F-W with MPI.
+3. Test all on large graphs from online libraries.
+3. Select one to compete with implementations available online.
+4. Compile graphs with runtime vs. # of cores.
+5. Provide a feature to get closeness centrality for given user's small Facebook network.
 
-## Concerns
-1) OpenMP, MPI, Hybrid, which exact algorithm
-2) Getting real data
+## Challenges
+We don't know yet which algorithm will work best and how well it will compare against the implementations available online. We have 2 approaches - F-W and Dijkstra's - and parallelization technologies - OpenMP and MPI.
+
+There are two other aspects whose implementation details we don't know yet: adapting graphs from online libraries and ranking facebook graph friendship. 
+
+For all the above, we believe it's just a matter of doing the work to get over these.
 
 ## Schedule
 
