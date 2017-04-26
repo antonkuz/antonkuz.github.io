@@ -17,7 +17,7 @@
   <h2 class="project-tagline">Anton Kuznetsov and Aditya Bhushan</h2>
   <a href="/" class="btn">Homepage</a>
   <a href="/main/2017/04/10/proposal.html" class="btn">Proposal</a>
-  <!-- <a href="#" class="btn">Checkpoint</a> -->
+  <a href="/main/2017/04/25/checkpoint.html" class="btn">Checkpoint</a>
   <!-- <a href="#" class="btn">Final Report</a> -->
   <!-- <a href="#" class="btn">Source Code</a> -->
 </section>
@@ -26,7 +26,7 @@
       
       <h1 id="proposal">Proposal</h1>
 <h2 id="summary">Summary</h2>
-<p>We are going to parallelize closeness centrality calculations for large weighted graphs and then apply the algorithm to graphs mined via Facebook Graph API. We want to generate graphs from real Facebook data and make graphs weighted by applying a friendship ranking metric. For these large weighted graphs, we want to develop a fast parallel closeness centrality implementation using OpenMP. We will run the algorithm on multi-core platforms such as the GHC machines.</p>
+<p>We are going to parallelize closeness centrality calculations for large weighted graphs and then apply the algorithm to graphs mined via Facebook Graph API. We want to generate graphs from real Facebook data and make graphs weighted by applying a friendship ranking metric. For these large weighted graphs, we want to develop a fast parallel closeness centrality implementation using OpenMP.</p>
 
 <h2 id="background">Background</h2>
 <p>Closeness centrality is a metric expresses the average social distance from each individual to every other individual in the network. If we divide 1 by the average shortest path from an individual to all other individuals in the network, then we have calculated their closeness centrality. In this way an individual with a direct tie to everyone else ends up with a closeness score of 1. One property of closeness centrality is that it tends to give high scores to individuals who are near the center of local clusters (aka network communities) in an overall larger network. High closeness centrality individuals tend to be important influencers within their local network community.</p>
@@ -38,7 +38,7 @@
 
 <h2 id="resources">Resources</h2>
 <p>There is some information available on parallelizing shortest path algorithms, such as <a href="http://www.cse.buffalo.edu/faculty/miller/Courses/CSE633/Ye-Fall-2012-CSE633.pdf">this presentation on Dijkstra’s</a>.
-Facebook’s Graph API doesn’t have an SDK for C++, so for mining we will either use another language and save graphs on disk, or port it to C++ and pipeline mining into the computation.
+For mining facebook graphs, we’ll use Facebook Graph API. We will start off with a scripting language like Python and save graphs on disk, and later might port the code to C++ to pipeline mining into the computation.
 For weighting graphs, we are planning to base it on <a href="https://github.com/gajus/facebook-friend-rank">this algorithm</a>.</p>
 
 <p>We plan to use the GHC machines for development and testing. We will program in C++ and use OpenMP for parallelization. We will also try using <a href="http://www.boost.org/doc/libs/1_63_0/libs/graph/doc/index.html">C++ Boost Library</a> functions for graphs and good old pthreads.</p>
@@ -78,7 +78,7 @@ For weighting graphs, we are planning to base it on <a href="https://github.com/
   <tbody>
     <tr>
       <td>April 10</td>
-      <td>Research papers/web on possible parallelization approachs.</td>
+      <td>Research papers/web on possible parallelization approaches.</td>
     </tr>
     <tr>
       <td>April 17</td>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  
+  <head>
+  <meta charset="UTF-8">
+  <title>Parallel Closeness Centrality for Facebook Graphs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#157878">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/cayman.css">
+</head>
+
+  <body>
+    <section class="page-header">
+  <h1 class="project-name">Parallel Closeness Centrality for Facebook Graphs</h1>
+  <h2 class="project-tagline">Anton Kuznetsov and Aditya Bhushan</h2>
+  <a href="/" class="btn">Homepage</a>
+  <a href="/main/2017/04/10/proposal.html" class="btn">Proposal</a>
+  <a href="/main/2017/04/25/checkpoint.html" class="btn">Checkpoint</a>
+  <!-- <a href="#" class="btn">Final Report</a> -->
+  <!-- <a href="#" class="btn">Source Code</a> -->
+</section>
+
+    <section class="main-content">
+      
+      <h1 id="checkpoint">Checkpoint</h1>
+
+<h2 id="progress">Progress</h2>
+<p>We started off by checking out Facebook API. Facebook provides the so-called Graph API, with which you communicate via RESTful API and get JSON formatted data with friends, posts, likes, etc. As we pulled the friends data, however, we discovered that it only displays the friends that have used the API. Facebook changed privacy settings for the API a couple years ago and now this is the restriction which app developers have no way to go around. We observed that on average less than 10% of friends are available. On top of the privacy issue, pulling the data took a long time: it took 10 minutes to get 1000 vertices (users). We haven’t benchmarked to figure out what the exact slowdown cause was (script was written in Python), but it’s likely the the API’s bandwidth limit.</p>
+
+<p>Considering alternative plans, we have also checked Twitter API. This API had it’s own drawbacks: while providing all followers, it limits the API calls to 15 requests per 15 minutes which makes it unfeasible for large graph mining.</p>
+
+<p>These discoveries made us reconsider Facebook API plans (see next section).</p>
+
+<p>Next, we looked into closeness centrality algorithm. Closeness centrality values are per vertex, and to get one we need the vertex’s shortest path distances to all other vertices in a graph. For social network graphs, we would like to get a table of users sorted by closeness centrality, so we need to find shortest path distances for all pairs, a problem called All Pairs Shortest Paths (APSP).</p>
+
+<p>We chose two main approaches to APSP: Floyd-Warshall (F-W) and Dijkstra’s. Dijkstra’s is Single Source Shortest Path, but repeating it V times can still be faster than F-W which is specifically for APSP.</p>
+
+<p>We’ve implemented simple sequential versions of F-W and Dijkstra’s. With Dijkstra’s there</p>
+
+<p>3) Parallel F-W and Dijkstra’s thoughts
+4) Started implementing the approach described in Phased Floyd-Warshall paper that uses MPI. This approach utlilizes blocking techniques to improve cache performance and at the same time ensuring lesser communication overheard when running in a distributed setting.
+<!-- 5) need connected graphs
+ --></p>
+<h2 id="goals-and-deliverables">Goals and Deliverables</h2>
+<p>1) Lowered priority of mining large real facebook. Reasons: speed slow, got 1000 people after 5-10 minutes of waiting. Didn’t try too much to figure out what the exact issue was: whether it was slow python dictionary as it gets large, or facebook limits api request latency. Dunno whether it’s limited by time or number. We also realized the larger the real graph is, the further we get from our connections and the less interesting the results are
+2) We will try both OpenMP and MPI, or even Hybrid. We’ll keep working on parallel F-W and dijkstra
+3) producing performance graphs is a big aspect. 
+4) benchmarking, getting real data
+5) once we’re done with parallel fw and dijkstra
+6) parallel some other sssp</p>
+
+<p>Describe how you are doing with respect to the goals and deliverables stated in your proposal. Do you still believe you will be able to produce all your deliverables? If not, why? What about the “nice to haves”? In your checkpoint writeup we want a new list of goals that you plan to hit for the Parallelism competition.
+What do you plan to show at the parallelism competition? Will it be a demo? Will it be a graph?</p>
+
+<h2 id="concerns">Concerns</h2>
+<p>The most challenging part as of now seems to be mining a large graph out of the facebook data. The API does allow us to use the data but there is a cap on number of requests that we can send. Also they only expose the data of users who are part of the developer community. These are prohibitive factors for mining a large graph from the real world facebook data. So we will have to do more research into how we can go about achieving that. We are keeping this as our stretch goal.</p>
+
+<h2 id="schedule">Schedule</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Time Period</th>
+      <th>Things to do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4/24-4/29</td>
+      <td>Aditya: Find best parallel Floyd-Warshall implementation; Anton: Find best parallel Dijkstra’s implementation</td>
+    </tr>
+    <tr>
+      <td>4/30-5/1</td>
+      <td>Exam 2</td>
+    </tr>
+    <tr>
+      <td>5/2-5/4</td>
+      <td>Both: Parse and test on large graphs, select which approaches to proceed with</td>
+    </tr>
+    <tr>
+      <td>5/5-5/7</td>
+      <td>Both: Divide up the approaches and optimize</td>
+    </tr>
+    <tr>
+      <td>5/8-5/12</td>
+      <td>Both: Generate final results, write final report.</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+      <footer class="site-footer">
+  <span class="site-footer-owner"><a href="http://localhost:4000">Parallel Closeness Centrality for Facebook Graphs</a> is maintained by <a href="http://github.com/antonkuz">Anton Kuznetsov</a>.</span>
+  <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+</footer>
+
+
+    </section>
+
+  </body>
+</html>
