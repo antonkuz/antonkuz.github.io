@@ -10,7 +10,7 @@ categories: main
 ## Progress
 We started off by checking out Facebook API. Facebook provides the so-called Graph API, with which you communicate via RESTful API and get JSON formatted data with friends, posts, likes, etc. As we pulled the friends data, however, we discovered that it only displays the friends that have used the API. Facebook changed privacy settings for the API a couple years ago and now this is the restriction which app developers have no way to go around. We observed that on average less than 10% of friends are available. On top of the privacy issue, pulling the data took a long time: it took 10 minutes to get 1000 vertices (users). We haven't benchmarked to figure out what the exact slowdown cause was (script was written in Python), but it's likely the the API's bandwidth limit. 
 
-Considering alternative options, we have also checked Twitter API. This API had it's own drawbacks: while providing all followers, it limits the API calls to 15 requests per 15 minutes which makes it unfeasible for large graph mining.
+Considering alternative options, we have also checked Twitter API. This API had its own drawbacks: while providing all followers, it limits the API calls to 15 requests per 15 minutes which makes it unfeasible for large graph mining.
 
 These discoveries made us reconsider Facebook API plans (see next section).
 
@@ -50,7 +50,7 @@ For all the above, we believe it's just a matter of doing the work to get over t
 | ------------ | ------------- |
 | 4/24-4/29 | Aditya: Find best parallel Floyd-Warshall implementation; Anton: Find best parallel Dijkstra's implementation. |
 | 4/30-5/1  | Exam 2.
-| 5/2-5/4   | Both: Parse and test on large graphs, select which approaches to proceed with. |
+| 5/2-5/4   | Aditya: Test on large graphs, select which approaches to proceed with; Anton: Implement edge weighing for Facebook. |
 | 5/5-5/7   | Both: Divide up the approaches and optimize. |
 | 5/8-5/12  | Both: Generate final results, write final report. |
 
