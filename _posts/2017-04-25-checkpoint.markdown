@@ -38,11 +38,9 @@ More specifically, the goals are the following:
 5. Provide a feature to get closeness centrality for given user's small Facebook network.
 
 ## Challenges
-We don't know yet which algorithm will work best and how well it will compare against the implementations available online. We have 2 approaches - F-W and Dijkstra's - and parallelization technologies - OpenMP and MPI.
+We don't know yet which algorithm will work best and how well it will compare against the implementations available online. We have 2 approaches - F-W and Dijkstra's - and parallelization technologies - OpenMP and MPI. Using OpenMP isn't going to be as trivial as just adding a pragma, there's synchronization needed as threads will have R-W conflicts. Dijkstra has 2 axises of parallelization: within itself and outside, as it's a SSSP algorithm.
 
-There are two other aspects whose implementation details we don't know yet: adapting graphs from online libraries and ranking facebook graph friendship. 
-
-For all the above, we believe it's just a matter of doing the work to get over these.
+There are two other aspects whose implementation details we don't know yet: benchmarking and ranking facebook graph edges (friendship). For benchmarking the challenges are adapting online graphs (they're usually not weighted), figuring out the impacts of cache and locality. For ranking facebook edges, we need to develop a metric that would capture friendship closeness. 
 
 ## Schedule
 
@@ -50,9 +48,9 @@ For all the above, we believe it's just a matter of doing the work to get over t
 | ------------ | ------------- |
 | 4/24-4/29 | Aditya: Find best parallel Floyd-Warshall implementation; Anton: Find best parallel Dijkstra's implementation. |
 | 4/30-5/1  | Exam 2.
-| 5/2-5/4   | Both: Compare all approaches, select which approaches to proceed with; |
-| 5/5-5/7   | Aditya: Optimize selected approach. Anton: Implement edge weighing and graph mining for Facebook. |
-| 5/8-5/12  | Both: Generate final results, write final report. |
+| 5/2-5/5   | Both: Compare all approaches, select which approaches to proceed with; |
+| 5/6-5/8   | Aditya: Optimize selected approach. Anton: Implement edge weighing and graph mining for Facebook. |
+| 5/9-5/12  | Both: Generate final results, write final report. |
 
 [jekyll-gh]: https://github.com/mojombo/jekyll
 [jekyll]:    http://jekyllrb.com
