@@ -33,9 +33,9 @@ More specifically, the goals are the following:
 1. Implement parallel versions of both F-W and Dijkstra's with OpenMP.
 2. Implement parallel F-W with MPI.
 3. Test all on large graphs from online libraries.
-3. Select one to compete with implementations available online.
+3. Compare with implementations available online.
 4. Compile graphs with runtime vs. # of cores.
-5. Provide a feature to get closeness centrality for given user's small Facebook network.
+5. Provide a feature to get closeness centrality for given user's Facebook network.
 
 ## Challenges
 We don't know yet which algorithm will work best and how well it will compare against the implementations available online. We have 2 approaches - F-W and Dijkstra's - and parallelization technologies - OpenMP and MPI. Using OpenMP isn't going to be as trivial as just adding a pragma, there's synchronization needed as threads will have R-W conflicts. Dijkstra has 2 axises of parallelization: within itself and outside, as it's a SSSP algorithm.
