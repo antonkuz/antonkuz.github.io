@@ -82,6 +82,7 @@ Our mining script was able to get graphs of size 500-1000 vertices, depending on
  * https://facebook-sdk.readthedocs.io/en/latest/index.html
  * http://www.boost.org/doc/libs/1_64_0/libs/graph/doc/index.html
  * https://github.com/LopesManuel/MPI-Floyd-Warshall-C
+ * [All-pairs Shortest Path Algorithm based on MPI+CUDA Distributed Parallel Programming Model](https://pdfs.semanticscholar.org/efa7/785a6f9d13ff5c8bf8c0b4ffab9ec9cf4057.pdf)
 
 ## List of work by each student
 Anton: Dijkstra's implementation, final closeness centrality code, Facebook mining
