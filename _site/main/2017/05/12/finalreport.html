@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  
+  <head>
+  <meta charset="UTF-8">
+  <title>Parallel Closeness Centrality with Application to Facebook Graphs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#157878">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/cayman.css">
+</head>
+
+  <body>
+    <section class="page-header">
+  <h1 class="project-name">Parallel Closeness Centrality with Application to Facebook Graphs</h1>
+  <h2 class="project-tagline">Anton Kuznetsov and Aditya Bhushan</h2>
+  <a href="/" class="btn">Homepage</a>
+  <a href="/main/2017/04/10/proposal.html" class="btn">Proposal</a>
+  <a href="/main/2017/04/25/checkpoint.html" class="btn">Checkpoint</a>
+  <a href="/main/2017/05/12/finalreport.html" class="btn">Final Report</a>
+  <a href="https://github.com/antonkuz/parallel-apsp-fb" class="btn">Source Code</a>
+</section>
+
+    <section class="main-content">
+      
+      <h1 id="final-report">Final Report</h1>
+
+<h2 id="summary">Summary</h2>
+<p>We parallelized closeness centrality calculation for weighted graphs and applied the algorithm to graphs that we mined via Facebook Graph API. We developed several implementations using OpenMP, MPI, and achieved 15x speedup compared to a C++ boost implementation. We also implemented a mining script that allows us to apply the algorithm to real Facebook data.</p>
+
+<h2 id="backround">Backround</h2>
+<p><strong>Closeness centrality</strong> is a metric expresses the average social distance from each individual to every other individual in the network. To calculate it, we divide 1 by the <em>average shortest path</em> from an individual to all other individuals in the network. Closeness centrality tends to give high scores to individuals who are near the center of local clusters in an overall larger network. High closeness centrality individuals tend to be important influencers within their local network community.</p>
+
+<p><strong>Problem setup</strong>. We wanted to apply closeness centrality to social graphs, and present the results by outputting a table with vertices (individuals) and their closeness centrality scores. As a constraint we decided to work with <em>weighted</em> graphs only. This eliminated the option for using BFS.</p>
+
+<p>The most computationally expensive part of closeness centrality calculation is getting <em>all pairs shortest paths</em> (APSP). The 2 main conventional approaches for that are Floyd-Warshall algorithm and Dijkstra’s. Floyd-Warshall operates on adjacency matrix and returns a matrix with APSP distances. Dijkstra’s is for single source shortest path, so it’d need to be repeated for each vertex. Despite this, sequential Dijkstra’s is faster for sparse graphs: complexity is O(V^2*logV) [VlogV repeated V times], while Floyd-Warshall’s is O(V^3). Social network graphs are sparse, so sequential Dijkstra’s is faster than Floyd-Warshall for our use case.</p>
+
+<p>The 2 parallelization technologies we focused on were OpenMP and MPI. Baseline we compared against was C++ boost implementation.</p>
+
+<p>Finally, we applied closeness centrality computation to real Facebook graphs. We used a Python API which has a function to provide connections for a given user. The graph had to be weighted, so we added a metric to assign weights to friendships.</p>
+
+<h2 id="approach">Approach</h2>
+<p>We analyzed 4 combinations of 2 algorithms(FW and Dijkstra’s) and 2 technologies (OpenMP and MPI).</p>
+
+<p><strong>Floyd-Warshall + OpenMP</strong>. Only inner loops are parallelizable, pragma not good for that.</p>
+
+<p><strong>Floyd-Warshall + MPI</strong>. ~~<del>INSERT HERE</del>~~</p>
+
+<p><strong>Dijkstra’s + OpenMP</strong>. As mentioned before, the end result we needed was closeness centrality scores for all individuals, so we needed shortest path distances for each vertex in a graph. Therefore, we applied OpenMP to run the searches in parallel with each other. Unlike Floyd-Warshall, there is a lot of implementation details left out in the algorithm pseudocode.
+<img src="INSERT LINK" alt="Dijkstra's pseudocode" />
+We went through a couple iterations of speeding up sequential Dijkstra’s. We started with the <a href="http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/">implementation from GeeksforGeeks</a>. For fast extract-min, it uses C++ standard library’s priority queue. The priority queue, however, doesn’t provide decrease-key function (part of <code class="highlighter-rouge">relax</code> in pseudocode). The online implementation deals with it by inserting the vertex in the priority queue again. This adds overhead in the end of the computation. We optimized the online implementation by adding a <code class="highlighter-rouge">finalized</code> array and tweaking the data scope (e.g. got rid of OOP).</p>
+
+<p>For mining, the challenges were working with Facebook graph structure and weighing the edges. 
+The mining basically consists of the following steps:</p>
+<ol>
+  <li>We initially don’t know the size of the graph, so store data in adjacency list.</li>
+  <li>Note: For weighing the edges, we decided to use the number of mutual friends as a metric.</li>
+  <li>Make an adjacency matrix and move the graph data.</li>
+  <li>Convert adjacency matrix to distance matrix by counting mutual friends for each pair.</li>
+  <li>Store the graph in text file by listing all edges.</li>
+</ol>
+
+<p>We weigh the graph. Metric: # of mutual friends. Weights get normalized [0,1]
+    * Pipelined mining into Centrality code.
+    * Extra work to convert names to numbers and back
+    * Mining
+      - mining is in python, algo is in c++, so communication</p>
+
+<h2 id="results">Results</h2>
+<p><strong>Floyd-Warshall + MPI</strong>. ~~<del>INSERT HERE</del>~~</p>
+
+<p><strong>Dijkstra’s + OpenMP</strong>.</p>
+<ul>
+  <li>our sequential Dijkstra’s was slightly faster than C++ boost library function.</li>
+  <li>used boost as a baseline, as it’s considered high quality, commonly used, and is available for free</li>
+  <li>
+    <p><img src="https://scontent.fagc2-1.fna.fbcdn.net/v/t35.0-12/18471761_654383788099442_1537955144_o.png?oh=cf139bb12b17b52ef5bbb5316cf3b452&amp;oe=59189324" alt="Plot1" /></p>
+  </li>
+  <li>discuss the plot in detail: measured against boost, sequential divided by wall-clock.</li>
+  <li>size and properties of test graph. mention that it’s connected</li>
+  <li>representation of graph and script to create them</li>
+  <li>wall clock graph</li>
+  <li>sssp is followed by sequential addition… nested openmp.</li>
+  <li>speedup limited at 24 cores.</li>
+  <li>bandwidth bound: memory accessees to priority queue, adj list, dist vector. we know it’s not amdahl’s law. also load imbalance.</li>
+  <li>NEW: time runtime against graph size on same number of cores</li>
+  <li>NEW: time how long it spends in sum section</li>
+</ul>
+
+<p>**Dijkstra’s + MPI **.
+No need to parallelize within since #ofNodes » #ofCores</p>
+
+<p><strong>Mining</strong>.</p>
+<ul>
+  <li>algo supports directed/undirected</li>
+  <li>Pipelined mining into Centrality code.</li>
+  <li>Extra stuff to convert names to numbers and back</li>
+</ul>
+
+<h2 id="references">References</h2>
+<ul>
+  <li>http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/</li>
+  <li>http://konect.uni-koblenz.de/networks/munmun_twitter_social</li>
+  <li>https://facebook-sdk.readthedocs.io/en/latest/index.html</li>
+  <li>http://www.boost.org/doc/libs/1_64_0/libs/graph/doc/index.html</li>
+</ul>
+
+<h2 id="list-of-work-by-each-student">List of work by each student</h2>
+
+
+
+      <footer class="site-footer">
+  <span class="site-footer-owner"><a href="http://localhost:4000">Parallel Closeness Centrality with Application to Facebook Graphs</a> is maintained by <a href="http://github.com/antonkuz">Anton Kuznetsov</a>.</span>
+  <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+</footer>
+
+
+    </section>
+
+  </body>
+</html>
