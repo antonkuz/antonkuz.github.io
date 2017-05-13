@@ -55,7 +55,7 @@ One compication we ran into was the fact that it's not possible to see connectio
 **Floyd-Warshall + MPI**.
 We ran the algorithm over graphs varying in sizes (shown in the table below) we got reasonable results for relatively smaller graphs but once we tried running it on much larger graphs (of the order of 40K nodes and above) the algorithm proved out to be prohibitively slow. We suspect that the reason is that although the algorithm does involve divide and conquer approach but the number of nodes that each process needs to handle is still very high and MPI introduces a lot of communication overhead as well. The memory footprint of this algorithm is also very high since we need to have temporary arrays at each node as well. 
 
-<img src="https://github.com/antonkuz/antonkuz.github.io/raw/master/images/Screen Shot 2017-05-12 at 11.04.27 PM.png" alt="Perforamnce Table" style="width: 200px;"/>
+<img src="https://github.com/antonkuz/antonkuz.github.io/raw/master/images/Screen Shot 2017-05-12 at 11.04.27 PM.png" alt="Perforamnce Table" style="width: 400px;"/>
 
 
 **Dijkstra's + OpenMP**.
