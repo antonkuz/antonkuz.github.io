@@ -12,6 +12,7 @@ We parallelized closeness centrality calculation for weighted graphs and applied
 
 ## Backround
 **Closeness centrality** is a metric expresses the average social distance from each individual to every other individual in the network. To calculate it, we divide 1 by the _average shortest path_ from an individual to all other individuals in the network. Closeness centrality tends to give high scores to individuals who are near the center of local clusters in an overall larger network. High closeness centrality individuals tend to be important influencers within their local network community.
+![cc](https://raw.githubusercontent.com/antonkuz/antonkuz.github.io/master/images/centrality.svg)
 
 **Problem setup**. We wanted to apply closeness centrality to social graphs, and present the results by outputting a table with vertices (individuals) and their closeness centrality scores. As a constraint we decided to work with _weighted_ graphs only. This eliminated the option for using BFS.
 
@@ -29,7 +30,9 @@ We analyzed 4 combinations of 2 algorithms(FW and Dijkstra's) and 2 technologies
 **Floyd-Warshall + MPI**. ~~~~INSERT HERE~~~~
 
 **Dijkstra's + OpenMP**. As mentioned before, the end result we needed was closeness centrality scores for all individuals, so we needed shortest path distances for each vertex in a graph. Therefore, we applied OpenMP to run the searches in parallel with each other. Unlike Floyd-Warshall, there is a lot of implementation details left out in the algorithm pseudocode.
-![Dijkstra's pseudocode](INSERT LINK)
+
+<img src="https://github.com/antonkuz/antonkuz.github.io/raw/master/images/dijkstra.png" alt="Dijkstra's pseudocode" style="width: 200px;"/>
+
 We went through a couple iterations of speeding up sequential Dijkstra's. We started with the [implementation from GeeksforGeeks](http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/). For fast extract-min, it uses C++ standard library's priority queue. The priority queue, however, doesn't provide decrease-key function (part of `relax` in pseudocode). The online implementation deals with it by inserting the vertex in the priority queue again. This adds overhead in the end of the computation. We optimized the online implementation by adding a `finalized` array and tweaking the data scope (e.g. got rid of OOP).
 
 For mining, the challenges were working with Facebook graph structure and weighing the edges. 
