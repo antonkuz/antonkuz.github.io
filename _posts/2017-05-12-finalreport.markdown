@@ -25,11 +25,14 @@ Finally, we applied closeness centrality computation to real Facebook graphs. We
 ## Approach
 We analyzed 4 combinations of 2 algorithms(FW and Dijkstra's) and 2 technologies (OpenMP and MPI).
 
-**Floyd-Warshall + OpenMP**. Only inner loops are parallelizable, pragma not good for that.
+**Floyd-Warshall + OpenMP**.
+While working with OpemMP we figured that iterations of the outermost `for` loop in the algorithm were not independent, so not much speed up could be achieved. Inner loops were parallel, but OpenMP's overhead for launching a gang of workers would be repeated for each iteration of the outermost loop and the implementation would only got slower.
 <img src="https://github.com/antonkuz/antonkuz.github.io/raw/master/images/fw.png" alt="FW pseudocode" style="width: 400px;"/>
 
 **Floyd-Warshall + MPI**.
-We analyzed the performance of FLoyd warshall algorithm using openMP and openMPI. While working with opemMP we figured that interations of the outermost for loop in the algorithm were not independant hence not much speed up could be achieved. Infact using opemMP for the inner loops made it slower because of overhead of launching the workers of the gang. We read online about various variants of Floyd warshall algorithm which have been used with openMPI to parallelize it. First we worked with an algorithm that just divides the matrix into horizontal blocks with each process taking care of certin rows in the matrix and communicate the results to the processes and finally the master gathering the result.We also analyzed the performance of a technique similar to the fox algorithm for matrix multiplication in which we divide the whole distance matrix into equal sized square chunks and assigned them to each of the processes ([reference code](https://github.com/LopesManuel/MPI-Floyd-Warshall-C)). Then two arrays per process are used which contained information about the row and column indexes of the elements which a process owns and is needed by the other processes. We then send these elements to the respective processes. Which then calculate the new value for their part of the distance matrix and send the updated value the process with Rank 0 then gathers all the small result matrices and populate the final result matrix which contains the result of the Floyd warshall algorithm.
+The first algorithm that we implemented was one that just divides the matrix into horizontal blocks with each process taking care of certain rows in the matrix and communicating the results to other processes and finally the master gathering the result.
+
+We also analyzed the performance of a technique similar to the fox algorithm for matrix multiplication in which we divide the whole distance matrix into equal sized square chunks and assign them to each of the processes ([reference code](https://github.com/LopesManuel/MPI-Floyd-Warshall-C)). In this approach, each process keeps two arrays containing information about the row and column indexes of the elements which the process owns and are needed by the other processes. These arrays determine the data that's communicated between processors. After exchanging the data, processes calculate new values for their part of the distance matrix and send the updated value to the master process which then gathers all the small result matrices and populates the final result matrix.
 
 **Dijkstra's + OpenMP**. As mentioned before, the end result we needed was closeness centrality scores for all individuals, so we needed shortest path distances for each vertex in a graph. Therefore, we applied OpenMP to run the searches in parallel with each other. Unlike Floyd-Warshall, there is a lot of implementation details left out in the algorithm pseudocode.
 
@@ -65,9 +68,10 @@ Below is the plot showing the speedup of centrality calculation with parallel Op
 
 We ran this test on `linux.andrew.cmu.edu` machine which has 2 6-core hyperthreaded Intel Xeon Processor E5645 cores, totaling in 24 threads. This explains why our speedup plot goes flat after 24 cores.
 
- - bandwidth bound: memory accessees to priority queue, adj list, dist vector. we know it's not amdahl's law. also load imbalance.
-**Final closeness central centrality code.**
-For the final closeness centrality implementation we went ahead with Dijkstra's + OpenMP approach. To get the actual closeness centrality scores we had to add code for averaging the distances.
+We speculate that the speedup is not linear because it's bandwidth bound. Each thread keeps a priority queue, a `finalized` vector, and centrality scores.
+
+**Final Closeness Centrality code.**
+For the final Closeness Centrality implementation we went ahead with Dijkstra's + OpenMP approach. To get the actual closeness centrality scores we had to add code for averaging the distances that the search returned. The summation process is not parallelized since the iterations are dependent and compute bound.
 
 **Mining**. 
 Our mining script was able to get graphs of size 500-1000 vertices, depending on connections (tested on 3 accounts). Next, we pipelined it into Closeness Centrality C++ code. This was done by saving the graph in a file and then calling the C++ binary executable. We're providing [instructions](https://github.com/antonkuz/antonkuz.github.io/blob/master/code/instructions.md) with the code to let you get closeness centrality scores for people in your network. The only change needed is the authentication token, the instructions are mostly for building the code.
@@ -77,6 +81,7 @@ Our mining script was able to get graphs of size 500-1000 vertices, depending on
  * http://konect.uni-koblenz.de/networks/munmun_twitter_social
  * https://facebook-sdk.readthedocs.io/en/latest/index.html
  * http://www.boost.org/doc/libs/1_64_0/libs/graph/doc/index.html
+ * https://github.com/LopesManuel/MPI-Floyd-Warshall-C
 
 ## List of work by each student
 Anton: Dijkstra's implementation, final closeness centrality code, Facebook mining
