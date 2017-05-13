@@ -40,12 +40,6 @@ The mining basically consists of the following steps:
 4. Convert adjacency matrix to distance matrix by counting mutual friends for each pair.
 5. Store the graph in text file by listing all edges.
 
-We weigh the graph. Metric: # of mutual friends. Weights get normalized [0,1]
-    * Pipelined mining into Centrality code.
-    * Extra work to convert names to numbers and back
-    * Mining
-      - mining is in python, algo is in c++, so communication
-
 ## Results
 **Floyd-Warshall + MPI**. ~~~~INSERT HERE~~~~
 
