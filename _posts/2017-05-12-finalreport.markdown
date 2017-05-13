@@ -45,7 +45,7 @@ The mining basically consists of the following steps:
 3. Make an adjacency matrix and move the graph data.
 4. Convert adjacency matrix to distance matrix by counting mutual friends and giving a normalized distance from 0 to 1.
 5. Store the graph in text file by listing all edges.
-One compication we ran into was the fact that you can't see connections of friends' friends', due to Facebook privacy restrictions. So most of the graph is represented like directed but at the edges (sides) of the network, the graph ends up being represented as undirected. So you can't mine further than depth=2 with Facebook API. Graphs we are able to get contain around 1000 vertices, so we left them for the application part, not speedup testing.
+One compication we ran into was the fact that it's not possible to see connections of friends' friends' due to Facebook privacy restrictions. So most of the graph is represented like directed but at the edges (sides) of the network, the graph ends up being represented as undirected. So it's not possible to mine further than depth=2 with Facebook API. Graphs we are able to get contain around 1000 vertices, so we left them for the application part, not speedup testing.
 
 ## Results
 **Floyd-Warshall + MPI**. ~~~~INSERT HERE~~~~
@@ -61,13 +61,9 @@ Below is the plot showing the speedup of centrality calculation with parallel Op
 We ran this test on `linux.andrew.cmu.edu` machine which has 2 6-core hyperthreaded Intel Xeon Processor E5645 cores, totaling in 24 threads. This explains why our speedup plot goes flat after 24 cores.
 
  - bandwidth bound: memory accessees to priority queue, adj list, dist vector. we know it's not amdahl's law. also load imbalance.
- - NEW: time runtime against graph size on same number of cores
- - NEW: time how long it spends in sum section
 
 **Mining**. 
- - algo supports directed/undirected
- - Pipelined mining into Centrality code.
- - Extra stuff to convert names to numbers and back
+Our mining script was able to get graphs of size 500-1000 vertices, depending on connections (tested on 3 accounts). Next, we pipelined it into Closeness Centrality C++ code. This was done by saving the graph in a file and then calling the C++ binary executable. We're providing [INSERT LINKinstructions](LOL) with the code to let you get closeness centrality scores for people in your network. The only change needed is the authentication token, the instructions are mostly for building the code.
 
 ## References
  * http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
@@ -76,4 +72,5 @@ We ran this test on `linux.andrew.cmu.edu` machine which has 2 6-core hyperthrea
  * http://www.boost.org/doc/libs/1_64_0/libs/graph/doc/index.html
 
 ## List of work by each student
-
+Anton: Dijkstra's implementation, final closeness centrality code, Facebook mining
+Aditya: Floyd-Warshall MPI implementations
