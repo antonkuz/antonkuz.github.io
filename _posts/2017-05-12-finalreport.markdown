@@ -63,7 +63,7 @@ We ran this test on `linux.andrew.cmu.edu` machine which has 2 6-core hyperthrea
  - bandwidth bound: memory accessees to priority queue, adj list, dist vector. we know it's not amdahl's law. also load imbalance.
 
 **Mining**. 
-Our mining script was able to get graphs of size 500-1000 vertices, depending on connections (tested on 3 accounts). Next, we pipelined it into Closeness Centrality C++ code. This was done by saving the graph in a file and then calling the C++ binary executable. We're providing [INSERT LINKinstructions](LOL) with the code to let you get closeness centrality scores for people in your network. The only change needed is the authentication token, the instructions are mostly for building the code.
+Our mining script was able to get graphs of size 500-1000 vertices, depending on connections (tested on 3 accounts). Next, we pipelined it into Closeness Centrality C++ code. This was done by saving the graph in a file and then calling the C++ binary executable. We're providing [instructions](https://github.com/antonkuz/antonkuz.github.io/blob/master/code/instructions.md) with the code to let you get closeness centrality scores for people in your network. The only change needed is the authentication token, the instructions are mostly for building the code.
 
 ## References
  * http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
@@ -73,4 +73,5 @@ Our mining script was able to get graphs of size 500-1000 vertices, depending on
 
 ## List of work by each student
 Anton: Dijkstra's implementation, final closeness centrality code, Facebook mining
+
 Aditya: Floyd-Warshall MPI implementations
