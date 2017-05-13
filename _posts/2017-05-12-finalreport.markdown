@@ -48,7 +48,13 @@ The mining basically consists of the following steps:
 One compication we ran into was the fact that it's not possible to see connections of friends' friends' due to Facebook privacy restrictions. So most of the graph is represented like directed but at the edges (sides) of the network, the graph ends up being represented as undirected. So it's not possible to mine further than depth=2 with Facebook API. Graphs we are able to get contain around 1000 vertices, so we left them for the application part, not speedup testing.
 
 ## Results
-**Floyd-Warshall + MPI**. ~~~~INSERT HERE~~~~
+**Floyd-Warshall + MPI**.
+ We analyzed the performance of FLoyd warshall algorithm using openMP and openMPI. While working with opemMP we figured that interations of the outermost for loop in the algorithm were not independant hence not much speed up could be achieved. Infact using opemMP for the inner loops made it slower because of overhead of launching the workers of the gang. We read online about various variants of Floyd warshall algorithm which have been used with openMPI to parallelize it. First we worked with an algorithm that just divides the matrix into horizontal blocks with each process taking care of certin rows in the matrix and communicate the results to the processes and finally the master gathering the result.We also analyzed the performance of a technique similar to the fox algorithm for matrix multiplication in which we divide the whole distance matrix into equal sized square chunks and assigned them to each of the processes [reference code](https://github.com/LopesManuel/MPI-Floyd-Warshall-C). Then two arrays per process are used which contained information about the row and column indexes of the elements which a process owns and is needed by the other processes. We then send these elements to the respective processes. Which then calculate the new value for their part of the distance matrix and send the updated value the process with Rank 0 then gathers all the small result matrices and populate the final result matrix which contains the result of the Floyd warshall algorithm.
+
+We ran the algorithm over graphs varying in sizes (shown in the table below) we got reasonable results for relatively smaller graphs but once we tried running it on much larger graphs (of the order of 40K nodes and above) the algorithm proved out to be prohibitively slow. We suspect that the reason is that although the algorithm does involve divide and conquer approach but the number of nodes that each process needs to handle is still very high and MPI introduces a lot of communication overhead as well. The memory footprint of this algorithm is also very high since we need to have temporary arrays at each node as well. 
+
+<img src="https://github.com/antonkuz/antonkuz.github.io/raw/master/images/Screen Shot 2017-05-12 at 11.04.27 PM.png" alt="Perforamnce Table" style="width: 200px;"/>
+
 
 **Dijkstra's + OpenMP**.
 Our sequential Dijkstra's was slightly faster than C++ boost library function. We proceeded with boost implementation as the baseline, as it's considered high quality and is commonly used. 
@@ -61,6 +67,8 @@ Below is the plot showing the speedup of centrality calculation with parallel Op
 We ran this test on `linux.andrew.cmu.edu` machine which has 2 6-core hyperthreaded Intel Xeon Processor E5645 cores, totaling in 24 threads. This explains why our speedup plot goes flat after 24 cores.
 
  - bandwidth bound: memory accessees to priority queue, adj list, dist vector. we know it's not amdahl's law. also load imbalance.
+**Final closeness central centrality code.**
+For the final closeness centrality implementation we went ahead with Dijkstra's + OpenMP approach. To get the actual closeness centrality scores we had to add code for averaging the distances.
 
 **Mining**. 
 Our mining script was able to get graphs of size 500-1000 vertices, depending on connections (tested on 3 accounts). Next, we pipelined it into Closeness Centrality C++ code. This was done by saving the graph in a file and then calling the C++ binary executable. We're providing [instructions](https://github.com/antonkuz/antonkuz.github.io/blob/master/code/instructions.md) with the code to let you get closeness centrality scores for people in your network. The only change needed is the authentication token, the instructions are mostly for building the code.
@@ -74,4 +82,4 @@ Our mining script was able to get graphs of size 500-1000 vertices, depending on
 ## List of work by each student
 Anton: Dijkstra's implementation, final closeness centrality code, Facebook mining
 
-Aditya: Floyd-Warshall MPI implementations
+Aditya: Floyd-Warshall MPI implementations and performance analysis.
